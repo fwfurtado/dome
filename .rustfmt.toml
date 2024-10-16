@@ -1,0 +1,4 @@
+edition = "2021"
+combine_control_expr = false
+fn_args_layout = "Vertical"
+fn_params_layout = "Vertical"
