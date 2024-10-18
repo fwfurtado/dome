@@ -1,0 +1,11 @@
+### POST Create a new Secret
+POST http://localhost:3000/secrets
+Content-Type: application/json
+
+{
+  "name": "my-secret",
+  "plain_text": "my-secret-value",
+  "url": "https://example.com"
+}
+
+###

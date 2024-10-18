@@ -8,6 +8,9 @@ aes-gcm = { version = "0.10.3", features = ["default"] }
 url = "2.5.2"
 hex = "0.4.3"
 derivative = "2.2.0"
+axum = "0.7.7"
+tokio = { version = "1.40.0", features = ["full"] }
+serde = { version = "1.0.210", features = ["derive"] }
 
 [dev-dependencies]
 fake = { version = "2.10.0", features = ["url"] }
