@@ -1,13 +1,19 @@
 use std::fmt::Display;
 
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-struct PlainText {
+pub struct PlainText {
     value: String,
 }
 
 impl PlainText {
-    fn new(value: String) -> Self {
-        PlainText { value }
+    pub fn new<'a>(value: String) -> Self {
+        PlainText {
+            value: value.clone(),
+        }
+    }
+
+    pub fn as_bytes(&self) -> &[u8] {
+        self.value.as_bytes()
     }
 }
 

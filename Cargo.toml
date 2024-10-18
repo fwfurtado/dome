@@ -4,8 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-
+aes-gcm = { version = "0.10.3", features = ["default"] }
+url = "2.5.2"
+hex = "0.4.3"
+derivative = "2.2.0"
 
 [dev-dependencies]
-fake = "2.10.0"
+fake = { version = "2.10.0", features = ["url"] }
 quickcheck = "1.0.3"
