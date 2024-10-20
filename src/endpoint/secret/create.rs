@@ -2,6 +2,7 @@ use crate::{Cipher, PlainText, Secret};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
+use log::debug;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -18,6 +19,8 @@ pub struct CreateSecretResponse {
 }
 
 pub async fn create(Json(input): Json<CreateSecretRequest>) -> impl IntoResponse {
+    debug!("Creating secret with name: {}", input.name);
+
     //TODO: extract this to a use case/service layer
     let plain_text = PlainText::new(input.plain_text);
 
@@ -26,6 +29,8 @@ pub async fn create(Json(input): Json<CreateSecretRequest>) -> impl IntoResponse
     let url = url::Url::parse(input.url.as_str()).unwrap();
 
     let secret = Secret::from_plain_text(input.name.clone(), url, cipher, plain_text).unwrap();
+
+    debug!("Secret created");
 
     (
         StatusCode::CREATED,

@@ -1,4 +1,4 @@
-use dome::{endpoint, http, routes, Config};
+use dome::{endpoint, http, routes, Config, Environment};
 use endpoint::secret;
 
 #[tokio::main]
@@ -7,5 +7,5 @@ async fn main() {
         "/secrets" => secret::routes()
     };
 
-    http::start(Config::default(), router).await;
+    http::start(&Environment::Local, Config::default(), router).await;
 }
