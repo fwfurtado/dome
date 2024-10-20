@@ -1,12 +1,13 @@
-pub mod config;
-pub mod domain;
-pub mod endpoint;
+mod config;
+mod domain;
+mod endpoint;
 mod environment;
-pub mod http;
+mod http;
 mod logging;
 
 pub use config::*;
 pub use domain::*;
+pub use endpoint::*;
 pub use environment::*;
 pub use http::*;
 pub use logging::*;

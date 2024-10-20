@@ -3,7 +3,7 @@ use axum::{serve, Router};
 use log::info;
 use tokio::net::TcpListener;
 
-pub async fn start(
+pub async fn serve_http(
     env: &Environment,
     config: Config<ServerConfig>,
     router: Router,
