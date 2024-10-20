@@ -11,7 +11,12 @@ derivative = "2.2.0"
 axum = "0.7.7"
 tokio = { version = "1.40.0", features = ["full"] }
 serde = { version = "1.0.210", features = ["derive"] }
+mime = "0.3.17"
+
 
 [dev-dependencies]
 fake = { version = "2.10.0", features = ["url"] }
 quickcheck = "1.0.3"
+tower = "0.5.1"
+serde_json = "1.0.132"
+http-body-util = "0.1.2"
