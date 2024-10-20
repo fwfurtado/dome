@@ -10,16 +10,6 @@ pub struct Secret {
 }
 
 impl Secret {
-    pub fn from_plain_text(
-        name: String,
-        url: url::Url,
-        cipher: Cipher,
-        plain_text: PlainText,
-    ) -> Result<Self, CipherError> {
-        let encrypted_text = cipher.encrypt(&plain_text)?;
-        Ok(Secret::new(name, url, cipher, encrypted_text))
-    }
-
     pub fn new(
         name: String,
         url: url::Url,

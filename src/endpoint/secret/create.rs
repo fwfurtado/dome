@@ -1,4 +1,8 @@
-use crate::{Cipher, PlainText, Secret};
+use crate::endpoint::HttpResult;
+use crate::gateway::SecretID;
+use crate::usecase::secret;
+use crate::usecase::secret::UseCaseError;
+use crate::{gateway, Cipher, ErrorResponse};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
@@ -7,38 +11,54 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CreateSecretRequest {
-    name: String,
-    plain_text: String,
-    url: String,
+    pub name: String,
+    pub plain_text: String,
+    pub url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CreateSecretResponse {
-    name: String,
-    encrypted_text: String,
+    id: String,
 }
 
-pub async fn create(Json(input): Json<CreateSecretRequest>) -> impl IntoResponse {
+pub async fn create(Json(input): Json<CreateSecretRequest>) -> HttpResult<impl IntoResponse> {
     debug!("Creating secret with name: {}", input.name);
+    let usecase = secret::UseCase::new(
+        Box::new(Cipher::default()),
+        Box::new(gateway::new_secret_gateway()),
+    );
 
-    //TODO: extract this to a use case/service layer
-    let plain_text = PlainText::new(input.plain_text);
+    let command = secret::CreateSecretCommand::from(input);
 
-    let cipher = Cipher::default();
-
-    let url = url::Url::parse(input.url.as_str()).unwrap();
-
-    let secret = Secret::from_plain_text(input.name.clone(), url, cipher, plain_text).unwrap();
-
-    debug!("Secret created");
-
-    (
-        StatusCode::CREATED,
-        Json(CreateSecretResponse {
-            name: input.name.clone(),
-            encrypted_text: secret.encrypted_text(),
-        }),
-    )
+    match usecase.create(&command).await {
+        Ok(id) => {
+            debug!("Secret created");
+            Ok((
+                StatusCode::CREATED,
+                Json(CreateSecretResponse { id: id.into() }),
+            ))
+        }
+        Err(UseCaseError::CipherError(e)) => {
+            debug!("Error creating secret: {}", e);
+            Err((
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(ErrorResponse {
+                    code: 123,
+                    message: e,
+                }),
+            ))
+        }
+        Err(UseCaseError::Unknown) => {
+            debug!("Error creating secret: unknown");
+            Err((
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(ErrorResponse {
+                    code: 500,
+                    message: "Unknown error".to_string(),
+                }),
+            ))
+        }
+    }
 }
 
 #[cfg(test)]
@@ -105,7 +125,6 @@ mod test {
 
         let secret: CreateSecretResponse = serde_json::from_str(&body).unwrap();
 
-        assert_eq!(secret.name, name);
-        assert!(!secret.encrypted_text.is_empty());
+        assert!(!secret.id.is_empty());
     }
 }

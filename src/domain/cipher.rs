@@ -1,17 +1,41 @@
 use crate::domain::{EncryptedText, PlainText};
-use std::fmt::Debug;
+use std::fmt::{Debug, Display, Formatter};
 
+use crate::Secret;
 use aes_gcm::aes::Aes256;
 use aes_gcm::{
     aead::{consts::U12, Aead, AeadCore, KeyInit, OsRng},
     Aes256Gcm, AesGcm, Key, Nonce,
 };
 use derivative::Derivative;
+use url::Url;
 
 #[derive(Clone, Debug)]
 pub enum CipherError {
     EncryptionError,
     DecryptionError,
+}
+
+impl Display for CipherError {
+    fn fmt(
+        &self,
+        f: &mut Formatter<'_>,
+    ) -> std::fmt::Result {
+        match self {
+            CipherError::EncryptionError => {
+                write!(
+                    f,
+                    "[EncryptionError] An error occurred while encrypting the text"
+                )
+            }
+            CipherError::DecryptionError => {
+                write!(
+                    f,
+                    "[DecryptionError] An error occurred while decrypting the text"
+                )
+            }
+        }
+    }
 }
 
 #[derive(Derivative)]
@@ -61,6 +85,17 @@ impl Cipher {
             .map_err(|_| CipherError::DecryptionError) //TODO: add error logging
             .map(|decrypted| String::from_utf8(decrypted).unwrap())
             .map(PlainText::new)
+    }
+
+    pub fn create_secret(
+        &self,
+        name: String,
+        url: Url,
+        plain_text: PlainText,
+    ) -> Result<Secret, CipherError> {
+        let encrypted_text = self.encrypt(&plain_text)?;
+
+        Ok(Secret::new(name, url, self.clone(), encrypted_text))
     }
 }
 
