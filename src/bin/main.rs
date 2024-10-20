@@ -1,9 +1,11 @@
-use dome::{endpoint, http, Config};
+use dome::{endpoint, http, routes, Config};
 use endpoint::secret;
 
 #[tokio::main]
 async fn main() {
-    let router = http::router(vec![("/secrets", secret::routes)]);
+    let router = routes! {
+        "/secrets" => secret::routes()
+    };
 
     http::start(Config::default(), router).await;
 }
