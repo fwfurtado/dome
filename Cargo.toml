@@ -3,6 +3,10 @@ name = "dome"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "http"
+path = "src/bin/main.rs"
+
 [dependencies]
 aes-gcm = { version = "0.10.3", features = ["default"] }
 url = "2.5.2"
