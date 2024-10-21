@@ -1,5 +1,5 @@
+use crate::domain::Secret;
 use crate::gateway::{SecretGateway, SecretGatewayError, SecretID};
-use crate::Secret;
 use log::info;
 
 #[derive(Debug)]

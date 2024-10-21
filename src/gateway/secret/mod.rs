@@ -1,6 +1,7 @@
-use crate::Secret;
+use crate::domain::Secret;
 use implementation::SecretGatewayImpl;
 use std::fmt::Debug;
+
 mod implementation;
 
 #[derive(Debug)]

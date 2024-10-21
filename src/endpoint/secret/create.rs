@@ -1,10 +1,9 @@
-use crate::endpoint::HttpResult;
-use crate::gateway::SecretID;
+use crate::domain::Cipher;
+use crate::endpoint::{ErrorResponse, HttpResult};
+use crate::gateway;
 use crate::usecase::secret;
 use crate::usecase::secret::UseCaseError;
-use crate::{gateway, Cipher, ErrorResponse};
 use axum::http::StatusCode;
-use axum::response::IntoResponse;
 use axum::Json;
 use log::debug;
 use serde::{Deserialize, Serialize};
@@ -21,7 +20,7 @@ pub struct CreateSecretResponse {
     id: String,
 }
 
-pub async fn create(Json(input): Json<CreateSecretRequest>) -> HttpResult<impl IntoResponse> {
+pub async fn create(Json(input): Json<CreateSecretRequest>) -> HttpResult<CreateSecretResponse> {
     debug!("Creating secret with name: {}", input.name);
     let usecase = secret::UseCase::new(
         Box::new(Cipher::default()),

@@ -1,5 +1,4 @@
 use axum::http::StatusCode;
-use axum::response::IntoResponse;
 use axum::Json;
 use serde::{Deserialize, Serialize};
 
@@ -11,4 +10,6 @@ pub struct ErrorResponse {
     message: String,
 }
 
-type HttpResult<T> = Result<T, (StatusCode, Json<ErrorResponse>)>;
+type HttpResult<T> = Result<StatusWithJson<T>, StatusWithJson<ErrorResponse>>;
+
+type StatusWithJson<T> = (StatusCode, Json<T>);

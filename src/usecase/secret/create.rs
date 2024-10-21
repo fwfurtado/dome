@@ -1,9 +1,10 @@
 use crate::gateway::SecretID;
 use log::{debug, info};
 
-use crate::secret::CreateSecretRequest;
 use crate::usecase::secret::{UseCase, UseCaseError};
-use crate::PlainText;
+
+use crate::domain::PlainText;
+use crate::endpoint::secret::CreateSecretRequest;
 use url::Url;
 
 #[derive(Clone, Debug)]

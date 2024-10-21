@@ -1,8 +1,8 @@
 use crate::gateway::{SecretGateway, SecretGatewayError};
-use crate::Cipher;
 
 mod create;
 
+use crate::domain::Cipher;
 pub use create::*;
 
 #[derive(Debug)]

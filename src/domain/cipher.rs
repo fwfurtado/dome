@@ -1,7 +1,6 @@
-use crate::domain::{EncryptedText, PlainText};
+use crate::domain::{EncryptedText, PlainText, Secret};
 use std::fmt::{Debug, Display, Formatter};
 
-use crate::Secret;
 use aes_gcm::aes::Aes256;
 use aes_gcm::{
     aead::{consts::U12, Aead, AeadCore, KeyInit, OsRng},

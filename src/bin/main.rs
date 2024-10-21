@@ -1,5 +1,8 @@
-use dome::{routes, Config, Environment};
-use dome::{secret, serve_http};
+use dome::config::Config;
+use dome::endpoint::secret;
+use dome::environment::Environment;
+use dome::http::serve_http;
+use dome::routes;
 
 #[tokio::main]
 async fn main() {
