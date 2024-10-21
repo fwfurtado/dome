@@ -78,6 +78,8 @@ mod test {
 
     use http_body_util::BodyExt;
 
+    use crate::domain::Cipher;
+    use crate::gateway::secret::SecretGateway;
     use tower::ServiceExt;
 
     fn url() -> url::Url {
@@ -85,8 +87,9 @@ mod test {
     }
 
     static ROUTES: LazyLock<Router> = LazyLock::new(|| {
+        let use_case = SecretUseCase::new(Cipher::default(), SecretGateway::new());
         routes![
-            "/" => routes()
+            "/" => routes(&use_case)
         ]
     });
 
