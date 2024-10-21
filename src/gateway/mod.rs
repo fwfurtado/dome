@@ -1,3 +1,1 @@
-mod secret;
-
-pub use secret::*;
+pub mod secret;

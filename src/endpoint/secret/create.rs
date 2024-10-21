@@ -1,8 +1,8 @@
-use crate::domain::Cipher;
 use crate::endpoint::{ErrorResponse, HttpResult};
-use crate::gateway;
+
 use crate::usecase::secret;
-use crate::usecase::secret::UseCaseError;
+use crate::usecase::secret::{SecretUseCase, UseCaseError};
+use axum::extract::State;
 use axum::http::StatusCode;
 use axum::Json;
 use log::debug;
@@ -20,16 +20,15 @@ pub struct CreateSecretResponse {
     id: String,
 }
 
-pub async fn create(Json(input): Json<CreateSecretRequest>) -> HttpResult<CreateSecretResponse> {
+pub async fn create(
+    State(use_case): State<SecretUseCase>,
+    Json(input): Json<CreateSecretRequest>,
+) -> HttpResult<CreateSecretResponse> {
     debug!("Creating secret with name: {}", input.name);
-    let usecase = secret::UseCase::new(
-        Box::new(Cipher::default()),
-        Box::new(gateway::new_secret_gateway()),
-    );
 
     let command = secret::CreateSecretCommand::from(input);
 
-    match usecase.create(&command).await {
+    match use_case.create(&command).await {
         Ok(id) => {
             debug!("Secret created");
             Ok((

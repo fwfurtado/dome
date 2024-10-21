@@ -1,7 +1,7 @@
-use crate::gateway::SecretID;
+use crate::gateway::secret::SecretID;
 use log::{debug, info};
 
-use crate::usecase::secret::{UseCase, UseCaseError};
+use crate::usecase::secret::{SecretUseCase, UseCaseError};
 
 use crate::domain::PlainText;
 use crate::endpoint::secret::CreateSecretRequest;
@@ -24,7 +24,7 @@ impl From<CreateSecretRequest> for CreateSecretCommand {
     }
 }
 
-impl UseCase {
+impl SecretUseCase {
     pub async fn create(
         &self,
         command: &CreateSecretCommand,

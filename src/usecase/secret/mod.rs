@@ -1,4 +1,4 @@
-use crate::gateway::{SecretGateway, SecretGatewayError};
+use crate::gateway::secret::{SecretGateway, SecretGatewayError};
 
 mod create;
 
@@ -17,17 +17,17 @@ impl From<SecretGatewayError> for UseCaseError {
     }
 }
 
-#[derive(Debug)]
-pub struct UseCase {
-    cipher: Box<Cipher>,
-    gateway: Box<dyn SecretGateway>,
+#[derive(Clone, Debug)]
+pub struct SecretUseCase {
+    cipher: Cipher,
+    gateway: SecretGateway,
 }
 
-impl UseCase {
+impl SecretUseCase {
     pub fn new(
-        cipher: Box<Cipher>,
-        gateway: Box<dyn SecretGateway>,
+        cipher: Cipher,
+        gateway: SecretGateway,
     ) -> Self {
-        UseCase { cipher, gateway }
+        SecretUseCase { cipher, gateway }
     }
 }
